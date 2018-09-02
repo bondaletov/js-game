@@ -90,7 +90,7 @@ describe('Класс Actor', () => {
 
     it('Создает объект заданного размера, если передать вектор вторым аргументом', () => {
       const player = new Actor(undefined, size);
-      console.log(size)
+      
       expect(player.size).is.equal(size);
     });
 
@@ -116,7 +116,7 @@ describe('Класс Actor', () => {
   describe('Границы объекта', () => {
     it('Имеет свойство left, которое содержит координату левой границы объекта по оси X', () => {
       const player = new Actor(position, size);
-
+      
       expect(player.left).is.equal(30);
     });
 
