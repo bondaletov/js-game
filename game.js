@@ -55,13 +55,6 @@ class Actor {
         } else {
             throw new TypeError("Ошибка в Actor speed");
         }
-        // if(pos instanceof Vector) {
-        //     this.size = size;
-        // } else {
-        //     this.size = new Vector(size);
-        // }
-
-        // this.speed = new Vector(speed);
     }
 
     get type() {
@@ -98,7 +91,45 @@ class Actor {
             // collision detected!
             return true;
         }
-        
+
         return false;
-       }
+    }
+}
+
+class Level {
+    constructor(grid, actors) {
+        this.grid = grid || [];
+        this.status = null;
+        this.finishDelay = 1;
+        this.actors = actors;
+    }
+
+    get height () { return this.grid.length; }
+
+    get width () { 
+        let maxWidth = 0;
+        (this.grid).forEach(row => {
+            if(row.length > maxWidth) {
+                maxWidth = row.length;
+            }
+        });
+        return maxWidth;
+    }
+    
+    get player () {
+        return (this.actors).find(el => el.title = "Игрок");
+    }
+
+    isFinished () {
+        if(this.status && this.finishDelay < 0) return true;
+        return false;
+    }
+    
+    actorAt (actor) {
+        if(!(actor instanceof Actor)) throw new Error;
+        if(this.actors === undefined) return undefined;
+        
+        return (this.actors).find(el => actor.isIntersect(el) === true);
+    }
+
 }
