@@ -231,7 +231,7 @@ describe('Класс Level', () => {
       const position = new Vector(0, 0);
 
       const wall = level.obstacleAt(position, size);
-
+      
       expect(wall).to.be.equal('wall');
     });
 

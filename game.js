@@ -128,8 +128,24 @@ class Level {
     actorAt (actor) {
         if(!(actor instanceof Actor)) throw new Error;
         if(this.actors === undefined) return undefined;
-        
+
         return (this.actors).find(el => actor.isIntersect(el) === true);
     }
 
+    obstacleAt (position, size) {
+        if ((false === position instanceof Vector) || (false === size instanceof Vector)) throw new Error;
+
+        position.x = Math.ceil(position.x);
+        position.y = Math.ceil(position.y);
+
+        if(position.x < 0) return 'wall';
+        if(position.x + size.x > this.width) return 'wall';
+        if(position.y < 0) return 'wall';
+        if(position.y + size.y > this.height) return 'lava';
+
+
+        if(this.grid[position.y][position.x] === 'wall') return 'wall';
+        if(this.grid[position.y][position.x] === 'lava') return 'lava';
+
+    }
 }
