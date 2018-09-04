@@ -161,7 +161,16 @@ class Level {
 
         const allActorsWithTypeStringType = (this.actors).filter(function(el) {
             return el.type === typeString;
-        })
+        });
         return allActorsWithTypeStringType.length === 0 ? true : false;
+    }
+
+    playerTouched (barrierStr, actor) {
+        if(barrierStr === 'lava' || barrierStr === 'fireball') this.status = 'lost';
+        if(barrierStr === 'coin' && actor instanceof Actor) {
+            this.removeActor(actor);
+            if(this.noMoreActors(barrierStr)) this.status = 'won';
+        }
+        
     }
 }
