@@ -148,14 +148,20 @@ class Level {
     }
 
     removeActor (actor) {
-        // console.log(this.actors)
-        // for (var [i, val] of positions.entries()) {
         for(var [idx, actorElement] of (this.actors).entries()) {
-            // console.log(idx)
             if(actor === actorElement) {
                 (this.actors).splice([idx], 1);
                 break;
             }
         }
+    }
+
+    noMoreActors (typeString) {
+        if(this.actors === undefined) return true;
+
+        const allActorsWithTypeStringType = (this.actors).filter(function(el) {
+            return el.type === typeString;
+        })
+        return allActorsWithTypeStringType.length === 0 ? true : false;
     }
 }
