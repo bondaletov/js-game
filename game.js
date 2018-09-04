@@ -174,3 +174,39 @@ class Level {
         
     }
 }
+
+class LevelParser {
+    constructor (dictionaryActors) {
+        this.dictionaryActors = dictionaryActors;
+    }
+    
+    actorFromSymbol (actorStr) {
+        if(actorStr === undefined) return undefined;
+        return this.dictionaryActors[actorStr];
+    }
+
+    obstacleFromSymbol(obstacleStr) {
+        const dictionaryObstacles = {
+            'x' : 'wall',
+            '!' : 'lava'
+        }
+
+        if(dictionaryObstacles.hasOwnProperty(obstacleStr)) {
+            return dictionaryObstacles[obstacleStr];
+        }
+        return undefined;
+    }
+
+    createGrid(plan) {
+        if(plan.length === 0) return [];
+        
+        const dictionaryObstacles = {
+            'x' : 'wall',
+            '!' : 'lava'
+        }
+
+        let copy = plan.slice();
+    
+        return copy.map((row, idx, arr) => arr[idx] = row.split('').map((cell, i, a) => a[i] = dictionaryObstacles[cell] || undefined))
+    }
+}
