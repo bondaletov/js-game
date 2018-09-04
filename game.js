@@ -143,9 +143,19 @@ class Level {
         if(position.y < 0) return 'wall';
         if(position.y + size.y > this.height) return 'lava';
 
-
         if(this.grid[position.y][position.x] === 'wall') return 'wall';
         if(this.grid[position.y][position.x] === 'lava') return 'lava';
+    }
 
+    removeActor (actor) {
+        // console.log(this.actors)
+        // for (var [i, val] of positions.entries()) {
+        for(var [idx, actorElement] of (this.actors).entries()) {
+            // console.log(idx)
+            if(actor === actorElement) {
+                (this.actors).splice([idx], 1);
+                break;
+            }
+        }
     }
 }

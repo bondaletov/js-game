@@ -331,7 +331,7 @@ describe('Класс Level', () => {
   describe('Метод removeActor', () => {
     it('Удаляет переданный движущийся объект', () => {
       const level = new Level(undefined, [ mushroom, giftSmall ]);
-
+      // console.log(level)
       level.removeActor(mushroom);
 
       expect(level.actors.includes(mushroom)).to.be.false;
