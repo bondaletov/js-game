@@ -192,11 +192,6 @@ class LevelParser {
     }
 
     obstacleFromSymbol(obstacleStr) {
-        // const dictionaryObstacles = {
-        //     'x' : 'wall',
-        //     '!' : 'lava'
-        // }
-
         if (this.dictionaryObstacles.hasOwnProperty(obstacleStr)) {
             return this.dictionaryObstacles[obstacleStr];
         }
@@ -206,13 +201,8 @@ class LevelParser {
     createGrid(plan) {
         if (plan.length === 0) return [];
 
-        // const dictionaryObstacles = {
-        //     'x' : 'wall',
-        //     '!' : 'lava'
-        // }
-
-        let copy = plan.slice();
-
-        return copy.map((row, idx, arr) => arr[idx] = row.split('').map((cell, i, a) => a[i] = this.dictionaryObstacles[cell] || undefined))
+        return plan.map(row => row.split('').map(cell => this.dictionaryObstacles[cell]));
     }
+
+    
 }
