@@ -207,8 +207,9 @@ class LevelParser {
     createActors(actors) {
         if (actors.length === 0 || this.dictionaryActors === undefined) return [];
 
-        // console.log(actors)
-        // console.log(this.dictionaryActors)
+        console.log('\n\n----start another test----------')
+        console.log(actors)
+        console.log(this.dictionaryActors)
 
         const checkActors = actors.every(row => {
             const tmp = row.split('');
@@ -221,20 +222,27 @@ class LevelParser {
         });
         if(!checkActors) return [];
 
-        const checkFunc = actors.every(row => {
+        const checkFuncAndActor = actors.every(row => {
             const tmp = row.split('');
             return tmp.every(cell => {
-                if(cell !== " " || typeof this.dictionaryActors[cell] !== 'function' || this.dictionaryActors[cell].name !== "Actor") {
-                    return false;
+                if(cell === " " || (typeof this.dictionaryActors[cell] === 'function' && (this.dictionaryActors[cell].name === "Actor" || this.dictionaryActors[cell].prototype instanceof Actor))) {
+                    return true;
                 }
-                return true;
+                return false;
             })
         });
-        if(!checkFunc) return [];
+        // console.log(checkFuncAndActor)
+        if(!checkFuncAndActor) return [];
 
-        // actors.forEach(function(element) {
-        //     console.log(element);
-        // });
+     
+
+        console.log('hello kitty')
+        actors.forEach(row => {
+            const tmp = row.split('');
+            tmp.forEach(cell => {
+                console.log(cell)
+            })
+        });
                 
     }
     
