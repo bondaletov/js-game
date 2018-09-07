@@ -207,13 +207,9 @@ class LevelParser {
     createActors(actors) {
         if (actors.length === 0 || this.dictionaryActors === undefined) return [];
 
+        // console.log(actors)
+        // console.log(this.dictionaryActors)
 
-        console.log(actors)
-        console.log(this.dictionaryActors)
-        
-        
-
-        // const checkActors = actors.every(actor => this.dictionaryActors[actor] !== undefined);
         const checkActors = actors.every(row => {
             const tmp = row.split('');
             return tmp.every(cell => {
@@ -223,19 +219,28 @@ class LevelParser {
                 return false;
             })
         });
-        
-        console.log(checkActors)
         if(!checkActors) return [];
 
-
-
-
-
-        // checkActors.forEach(actor => {
-        //    console.log(actor) 
+        // const checkFunc = actors.every(actor => {
+        //    if(typeof this.dictionaryActors[actor] === 'function') return true;
+        //    return false;
         // });
+        const checkFunc = actors.every(row => {
+            const tmp = row.split('');
+            return tmp.every(cell => {
+                if(cell === " " || typeof this.dictionaryActors[cell] === 'function') {
+                    return true;
+                }
+                return false;
+            })
+        });
+        console.log(checkFunc)
+        if(!checkFunc) return [];
 
-        
+        // actors.forEach(function(element) {
+        //     console.log(element);
+        // });
+                
     }
     
 }
