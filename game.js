@@ -236,11 +236,15 @@ class LevelParser {
 
      
         let resultActorsArray = [];
-        actors.forEach(row => {
+        actors.forEach((row, rowIdx) => {
             const tmp = row.split('');
-            tmp.forEach(cell => {
+            tmp.forEach((cell, cellIdx) => {
                 if(cell === " ") return;
-                resultActorsArray.push(new this.dictionaryActors[cell]());
+                console.log(rowIdx, cellIdx);
+                const position = new Vector(cellIdx, rowIdx);
+                console.log('pos:', position)
+                console.log('+++++\n\n')
+                resultActorsArray.push(new this.dictionaryActors[cell](position));
             })
         });
         
