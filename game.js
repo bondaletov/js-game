@@ -239,6 +239,7 @@ class LevelParser {
         actors.forEach(row => {
             const tmp = row.split('');
             tmp.forEach(cell => {
+                if(cell === " ") return;
                 resultActorsArray.push(new this.dictionaryActors[cell]());
             })
         });
