@@ -204,5 +204,38 @@ class LevelParser {
         return plan.map(row => row.split('').map(cell => this.dictionaryObstacles[cell]));
     }
 
+    createActors(actors) {
+        if (actors.length === 0 || this.dictionaryActors === undefined) return [];
+
+
+        console.log(actors)
+        console.log(this.dictionaryActors)
+        
+        
+
+        // const checkActors = actors.every(actor => this.dictionaryActors[actor] !== undefined);
+        const checkActors = actors.every(row => {
+            const tmp = row.split('');
+            return tmp.every(cell => {
+                if(cell === " " || this.dictionaryActors[cell] !== undefined) {
+                    return true;
+                }
+                return false;
+            })
+        });
+        
+        console.log(checkActors)
+        if(!checkActors) return [];
+
+
+
+
+
+        // checkActors.forEach(actor => {
+        //    console.log(actor) 
+        // });
+
+        
+    }
     
 }
