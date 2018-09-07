@@ -207,14 +207,13 @@ class LevelParser {
     createActors(actors) {
         if (actors.length === 0 || this.dictionaryActors === undefined) return [];
 
-        console.log('\n\n----start another test----------')
-        console.log(actors)
-        console.log(this.dictionaryActors)
+
+
 
         const checkActors = actors.every(row => {
             const tmp = row.split('');
             return tmp.every(cell => {
-                if(cell === " " || this.dictionaryActors[cell] !== undefined ) {
+                if(cell === " " || this.dictionaryActors[cell] !== undefined || this.dictionaryObstacles[cell] !== undefined) {
                     return true;
                 }
                 return false;
@@ -225,31 +224,45 @@ class LevelParser {
         const checkFuncAndActor = actors.every(row => {
             const tmp = row.split('');
             return tmp.every(cell => {
-                if(cell === " " || (typeof this.dictionaryActors[cell] === 'function' && (this.dictionaryActors[cell].name === "Actor" || this.dictionaryActors[cell].prototype instanceof Actor))) {
+                if(cell === " " || (typeof this.dictionaryActors[cell] === 'function' && (this.dictionaryActors[cell].name === "Actor" || this.dictionaryActors[cell].prototype instanceof Actor)) || this.dictionaryObstacles[cell] !== undefined) {
                     return true;
                 }
                 return false;
             })
         });
-        // console.log(checkFuncAndActor)
         if(!checkFuncAndActor) return [];
 
+        
      
         let resultActorsArray = [];
         actors.forEach((row, rowIdx) => {
             const tmp = row.split('');
             tmp.forEach((cell, cellIdx) => {
-                if(cell === " ") return;
-                console.log(rowIdx, cellIdx);
+                if(cell === " " || this.dictionaryObstacles[cell] !== undefined) return;
+                
                 const position = new Vector(cellIdx, rowIdx);
-                console.log('pos:', position)
-                console.log('+++++\n\n')
                 resultActorsArray.push(new this.dictionaryActors[cell](position));
             })
         });
         
+
         console.log(resultActorsArray)
         return resultActorsArray;
     }
     
+    parse (plan) {
+        console.log("plan: ", plan)
+        // console.log(this.dictionaryActors)
+
+        const grid = this.createGrid(plan);
+
+        const actors = this.createActors(plan);
+        // console.log(test)
+        // plan.forEach(el => console.log(el))
+
+        // var abc = this.createActors();
+        // console.log("actors:")
+
+        return new Level(grid, actors);
+    }
 }
