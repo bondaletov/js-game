@@ -200,15 +200,11 @@ class LevelParser {
 
     createGrid(plan) {
         if (plan.length === 0) return [];
-
         return plan.map(row => row.split('').map(cell => this.dictionaryObstacles[cell]));
     }
 
     createActors(actors) {
         if (actors.length === 0 || this.dictionaryActors === undefined) return [];
-
-
-
 
         const checkActors = actors.every(row => {
             const tmp = row.split('');
@@ -232,8 +228,6 @@ class LevelParser {
         });
         if(!checkFuncAndActor) return [];
 
-        
-     
         let resultActorsArray = [];
         actors.forEach((row, rowIdx) => {
             const tmp = row.split('');
@@ -245,23 +239,12 @@ class LevelParser {
             })
         });
         
-
-        console.log(resultActorsArray)
         return resultActorsArray;
     }
     
     parse (plan) {
-        console.log("plan: ", plan)
-        // console.log(this.dictionaryActors)
-
         const grid = this.createGrid(plan);
-
         const actors = this.createActors(plan);
-        // console.log(test)
-        // plan.forEach(el => console.log(el))
-
-        // var abc = this.createActors();
-        // console.log("actors:")
 
         return new Level(grid, actors);
     }
