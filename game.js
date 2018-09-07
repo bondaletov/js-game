@@ -235,15 +235,16 @@ class LevelParser {
         if(!checkFuncAndActor) return [];
 
      
-
-        console.log('hello kitty')
+        let resultActorsArray = [];
         actors.forEach(row => {
             const tmp = row.split('');
             tmp.forEach(cell => {
-                console.log(cell)
+                resultActorsArray.push(new this.dictionaryActors[cell]());
             })
         });
-                
+        
+        console.log(resultActorsArray)
+        return resultActorsArray;
     }
     
 }
