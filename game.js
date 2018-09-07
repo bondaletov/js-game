@@ -213,7 +213,7 @@ class LevelParser {
         const checkActors = actors.every(row => {
             const tmp = row.split('');
             return tmp.every(cell => {
-                if(cell === " " || this.dictionaryActors[cell] !== undefined) {
+                if(cell === " " || this.dictionaryActors[cell] !== undefined ) {
                     return true;
                 }
                 return false;
@@ -221,20 +221,15 @@ class LevelParser {
         });
         if(!checkActors) return [];
 
-        // const checkFunc = actors.every(actor => {
-        //    if(typeof this.dictionaryActors[actor] === 'function') return true;
-        //    return false;
-        // });
         const checkFunc = actors.every(row => {
             const tmp = row.split('');
             return tmp.every(cell => {
-                if(cell === " " || typeof this.dictionaryActors[cell] === 'function') {
-                    return true;
+                if(cell !== " " || typeof this.dictionaryActors[cell] !== 'function' || this.dictionaryActors[cell].name !== "Actor") {
+                    return false;
                 }
-                return false;
+                return true;
             })
         });
-        console.log(checkFunc)
         if(!checkFunc) return [];
 
         // actors.forEach(function(element) {
