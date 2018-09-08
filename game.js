@@ -49,7 +49,7 @@ class Actor {
         }
 
         if (speed instanceof Vector) {
-            this.speed = pos;
+            this.speed = speed;
         } else if (speed === undefined) {
             this.speed = new Vector();
         } else {
@@ -169,7 +169,8 @@ class Level {
 
     playerTouched(barrierStr, actor) {
         if (barrierStr === 'lava' || barrierStr === 'fireball') this.status = 'lost';
-        if (barrierStr === 'coin' && actor instanceof Actor) {
+
+        if (barrierStr === 'coin' && (actor instanceof Actor || actor.__proto__ instanceof Actor)) {
             this.removeActor(actor);
             if (this.noMoreActors(barrierStr)) this.status = 'won';
         }
@@ -247,5 +248,24 @@ class LevelParser {
         const actors = this.createActors(plan);
 
         return new Level(grid, actors);
+    }
+}
+
+class Fireball extends Actor {
+    constructor(pos, speed) {
+        super(pos, undefined, speed);
+    }
+
+    get type() {
+        return "fireball";
+    }
+
+    getNextPosition (t = 1) {
+        for(var i = 0; i < t; i++) {
+           this.pos.x = this.pos.x + this.speed.x;
+           this.pos.y = this.pos.y + this.speed.y;
+        }
+        
+        return this.pos;
     }
 }
