@@ -268,4 +268,16 @@ class Fireball extends Actor {
         
         return this.pos;
     }
+
+    handleObstacle () {
+        this.speed.x *= -1;
+        this.speed.y *= -1;
+    }
+
+    act (time, level) {
+        const nextPosition = this.getNextPosition(time); 
+        const obstacle = level.obstacleAt(nextPosition, this.size);
+        if(obstacle !== undefined) this.handleObstacle();
+
+    }
 }
