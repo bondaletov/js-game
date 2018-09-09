@@ -356,3 +356,20 @@ class Player extends Actor {
     }
 }
 
+
+const schema = [
+    '         ',
+    '         ',
+    '         ',
+    '         ',
+    '     !xxx',
+    ' @       ',
+    'xxx!     ',
+    '         '
+  ];
+  const actorDict = {
+    '@': Player
+  }
+  const parser = new LevelParser(actorDict);
+  const level = parser.parse(schema);
+  runLevel(level, DOMDisplay);
