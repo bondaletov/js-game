@@ -175,7 +175,7 @@ class Level {
     playerTouched(barrierStr, actor) {
         if (barrierStr === 'lava' || barrierStr === 'fireball') this.status = 'lost';
 
-        if (barrierStr === 'coin') {
+        if (barrierStr === 'coin' && actor.type === 'coin') {
         // if (barrierStr === 'coin' && (actor instanceof Actor || actor.__proto__ instanceof Actor)) {
             this.removeActor(actor);
             if (this.noMoreActors(barrierStr)) this.status = 'won';
@@ -207,7 +207,17 @@ class LevelParser {
 
     createGrid(plan) {
         if (plan.length === 0) return [];
-        return plan.map(row => row.split('').map(cell => this.dictionaryObstacles[cell]));
+        let grid = [];
+
+        for (let lines of plan) {
+            let result = [];
+            [...lines].forEach((symbol) => result.push(this.obstacleFromSymbol(symbol)));
+            grid.push(result);
+        }
+
+        return grid;
+        // console.log(this.dictionaryObstacles)
+        // return plan.map(row => row.split('').map(cell => this.dictionaryObstacles[cell]));
     }
 
     createActors(actorsKeys) {
@@ -271,8 +281,8 @@ class LevelParser {
     // }
 
     parse(plan) {
-        const grid = this.createGrid(plan);
-        const actors = this.createActors(plan);
+        let grid = this.createGrid(plan);
+        let actors = this.createActors(plan);
 
         return new Level(grid, actors);
     }
@@ -311,6 +321,7 @@ class Fireball extends Actor {
 
 class HorizontalFireball extends Fireball {
     constructor(pos) {
+        // console.log(pos)
         const speed = new Vector(2, 0);
         super(pos, speed);
     }
@@ -324,8 +335,7 @@ class VerticalFireball extends Fireball {
 }
 class FireRain extends Fireball {
     constructor(pos) {
-        const speed = new Vector(0, 3);
-        super(pos, speed);
+        super(pos, new Vector(0, 3));
         this.startPos = pos;
     }
 
@@ -336,17 +346,12 @@ class FireRain extends Fireball {
 
 class Coin extends Actor {
     constructor(pos) {
-        const size = new Vector(0.6, 0.6);
-        if (pos instanceof Vector) {
-            pos.x += 0.2;
-            pos.y += 0.1;
-        }
-        super(pos, size);
-
-        this.startPos = Object.assign(this.pos) || new Vector();
-        this.springSpeed = 8;
+        super(pos, new Vector(0.6, 0.6));
+        this.pos = this.pos.plus(new Vector(0.2, 0.1));
+        this.startPos = Object.assign(this.pos);
+        this.spring = Math.random() * (Math.PI * 2);
         this.springDist = 0.07;
-        this.spring = Math.random() * (2 * Math.PI - 0) + 0;
+        this.springSpeed = 8;
     }
 
     get type() {
@@ -383,30 +388,16 @@ class Player extends Actor {
     }
 }
 
+const actorDict = {
+    '@': Player,
+    'v': FireRain,
+    'o': Coin,
+    '=': HorizontalFireball,
+    '|': VerticalFireball
+};
 
-// const schema = [
-//     '         ',
-//     '         ',
-//     '         ',
-//     '         ',
-//     '     !xxx',
-//     ' @       ',
-//     'xxxxxxxxx',
-//     '         '
-//   ];
-// const schema = [
-//     '         ',
-//     '         ',
-//     '         ',
-//     '         ',
-//     '     !xxx',
-//     ' @       ',
-//     'xxx!     ',
-//     '         '
-// ];
-// const actorDict = {
-//     '@': Player
-// }
-// const parser = new LevelParser(actorDict);
-// const level = parser.parse(schema);
-// runLevel(level, DOMDisplay);
+const parser = new LevelParser(actorDict);
+
+loadLevels()
+    .then((res) => {runGame(JSON.parse(res), parser, DOMDisplay)
+    .then(() => alert('Вы выиграли!'))});
