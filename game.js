@@ -194,7 +194,7 @@ class LevelParser {
     }
 
     actorFromSymbol(actorStr) {
-        if (actorStr === undefined) return undefined;
+        if (actorStr === undefined || this.dictionaryActors === undefined) return undefined;
         return this.dictionaryActors[actorStr];
     }
 
@@ -210,44 +210,65 @@ class LevelParser {
         return plan.map(row => row.split('').map(cell => this.dictionaryObstacles[cell]));
     }
 
-    createActors(actors) {
-        if (actors.length === 0 || this.dictionaryActors === undefined) return [];
+    createActors(actorsKeys) {
+        // if (actorsKeys.length === 0 || this.dictionaryActors === undefined) return [];
+        if (!Array.isArray(actorsKeys)) {
+            return;
+        }
 
-        const checkActors = actors.every(row => {
-            const tmp = row.split('');
-            return tmp.every(cell => {
-                if (cell === " " || this.dictionaryActors[cell] !== undefined || this.dictionaryObstacles[cell] !== undefined) {
-                    return true;
+        let actors = [];
+        actorsKeys.forEach((itemY, y) => {
+            [...itemY].forEach((itemX, x) => {
+                let Constructor = this.actorFromSymbol(itemX);
+                let result;
+                if (typeof Constructor === 'function') {
+                    result = new Constructor(new Vector(x, y));
                 }
-                return false;
-            })
-        });
-        if (!checkActors) return [];
-
-        const checkFuncAndActor = actors.every(row => {
-            const tmp = row.split('');
-            return tmp.every(cell => {
-                if (cell === " " || (typeof this.dictionaryActors[cell] === 'function' && (this.dictionaryActors[cell].name === "Actor" || this.dictionaryActors[cell].prototype instanceof Actor)) || this.dictionaryObstacles[cell] !== undefined) {
-                    return true;
+                if (result instanceof Actor) {
+                    actors.push(result);
                 }
-                return false;
-            })
+            });
         });
-        if (!checkFuncAndActor) return [];
-
-        let resultActorsArray = [];
-        actors.forEach((row, rowIdx) => {
-            const tmp = row.split('');
-            tmp.forEach((cell, cellIdx) => {
-                if (cell === " " || this.dictionaryObstacles[cell] !== undefined) return;
-
-                const position = new Vector(cellIdx, rowIdx);
-                resultActorsArray.push(new this.dictionaryActors[cell](position));
-            })
-        });
-
-        return resultActorsArray;
+        return actors;
     }
+    // createActors(actors) {
+    //     if (actors.length === 0 || this.dictionaryActors === undefined) return [];
+
+    //     const checkActors = actors.every(row => {
+    //         const tmp = row.split('');
+    //         return tmp.every(cell => {
+    //             if (cell === " " || this.dictionaryActors[cell] !== undefined || this.dictionaryObstacles[cell] !== undefined) {
+    //                 return true;
+    //             }
+    //             return false;
+    //         })
+    //     });
+    //     if (!checkActors) return [];
+
+    //     const checkFuncAndActor = actors.every(row => {
+    //         const tmp = row.split('');
+    //         return tmp.every(cell => {
+    //             if (cell === " " || (typeof this.dictionaryActors[cell] === 'function' && (this.dictionaryActors[cell].name === "Actor" || this.dictionaryActors[cell].prototype instanceof Actor)) || this.dictionaryObstacles[cell] !== undefined) {
+    //                 return true;
+    //             }
+    //             return false;
+    //         })
+    //     });
+    //     if (!checkFuncAndActor) return [];
+
+    //     let resultActorsArray = [];
+    //     actors.forEach((row, rowIdx) => {
+    //         const tmp = row.split('');
+    //         tmp.forEach((cell, cellIdx) => {
+    //             if (cell === " " || this.dictionaryObstacles[cell] !== undefined) return;
+
+    //             const position = new Vector(cellIdx, rowIdx);
+    //             resultActorsArray.push(new this.dictionaryActors[cell](position));
+    //         })
+    //     });
+
+    //     return resultActorsArray;
+    // }
 
     parse(plan) {
         const grid = this.createGrid(plan);
