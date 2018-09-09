@@ -277,7 +277,33 @@ class Fireball extends Actor {
     act (time, level) {
         const nextPosition = this.getNextPosition(time); 
         const obstacle = level.obstacleAt(nextPosition, this.size);
-        if(obstacle !== undefined) this.handleObstacle();
 
+        if(obstacle !== undefined) this.handleObstacle();
     }
 }
+
+class HorizontalFireball extends Fireball {
+    constructor(pos) {
+        const speed = new Vector(2,0);
+        super(pos, speed);
+    }
+}
+
+class VerticalFireball extends Fireball {
+    constructor(pos) {
+        const speed = new Vector(0,2);
+        super(pos, speed);
+    }
+}
+class FireRain extends Fireball {
+    constructor(pos) {
+        const speed = new Vector(0,3);
+        super(pos, speed);
+        this.startPos = pos;
+    }
+
+    handleObstacle () {
+        this.pos = this.startPos;
+    }
+}
+
