@@ -20,10 +20,7 @@ class Vector {
     times(n) {
         const x = this.x * n;
         const y = this.y * n;
-        return new Vector({
-            x: x,
-            y: y
-        });
+        return new Vector(x, y);
     }
 }
 
@@ -66,16 +63,16 @@ class Actor {
     }
 
     get left() {
-        return this.pos.x
+        return this.pos.x;
     }
     get right() {
-        return this.pos.x + this.size.x
+        return this.pos.x + this.size.x;
     }
     get top() {
-        return this.pos.y
+        return this.pos.y;
     }
     get bottom() {
-        return this.pos.y + this.size.y
+        return this.pos.y + this.size.y;
     }
 
     isIntersect(actor) {
@@ -102,6 +99,12 @@ class Level {
         this.status = null;
         this.finishDelay = 1;
         this.actors = actors;
+
+        if (this.actors) {
+            this.player = this.actors.find(function (actor) {
+                return actor.type === 'player';
+            });
+        }
     }
 
     get height() {
@@ -118,9 +121,9 @@ class Level {
         return maxWidth;
     }
 
-    get player() {
-        return (this.actors).find(el => el.title = "Игрок");
-    }
+    // get player() {
+    //     return (this.actors).find(el => el.title = "Игрок");
+    // }
 
     isFinished() {
         if (this.status && this.finishDelay < 0) return true;
