@@ -275,7 +275,7 @@ describe('Класс LevelParser', () => {
 
     it('Создаст уровень с движущимися объектами из плана', () => {
       const parser = new LevelParser({ o: Gift, z: Mushroom });
-
+      // console.log(parser)
       const level = parser.parse(plan);
 
       expect(level.actors).to.have.length(5);

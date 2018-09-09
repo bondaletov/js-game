@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,53 @@
   <title>Document</title>
   <link rel="stylesheet" href="./css/main.css">
 </head>
+
 <body>
   <script src="./js/app.js"></script>
   <script src="./game.js"></script>
+  <script>
+    const grid = [
+      [undefined, undefined],
+      ['wall', 'wall']
+    ];
+
+    function MyCoin(title) {
+      this.type = 'coin';
+      this.title = title;
+    }
+    MyCoin.prototype = Object.create(Actor);
+    MyCoin.constructor = MyCoin;
+
+    const goldCoin = new MyCoin('Золото');
+    const bronzeCoin = new MyCoin('Бронза');
+    const player = new Actor();
+    const fireball = new Actor();
+
+    const level = new Level(grid, [goldCoin, bronzeCoin, player, fireball]);
+
+    level.playerTouched('coin', goldCoin);
+    level.playerTouched('coin', bronzeCoin);
+
+    if (level.noMoreActors('coin')) {
+      console.log('Все монеты собраны');
+      console.log(`Статус игры: ${level.status}`);
+    }
+
+    const obstacle = level.obstacleAt(new Vector(1, 1), player.size);
+    if (obstacle) {
+      console.log(`На пути препятствие: ${obstacle}`);
+    }
+
+    const otherActor = level.actorAt(player);
+    if (otherActor === fireball) {
+      console.log('Пользователь столкнулся с шаровой молнией');
+    }
+
+    // console.log(MyCoin instanceof Actor)
+    // console.log(Actor.isPrototypeOf(MyCoin))
+    // console.log(MyCoin.prototype instanceof Actor)
+    // console.log(MyCoin.__proto__ instanceof Actor)
+  </script>
 </body>
+
 </html>
