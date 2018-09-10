@@ -146,19 +146,36 @@ class Level {
         });
     }
 
-    obstacleAt(position, size) {
+    obstacleAt(position, size) { // #FIXME
         if ((false === position instanceof Vector) || (false === size instanceof Vector)) throw new Error;
+        
 
-        position.x = Math.ceil(position.x);
-        position.y = Math.ceil(position.y);
+        const leftBorder = Math.floor(position.x);
+        const rightBorder = Math.ceil(position.x + size.x);
+        const topBorder = Math.floor(position.y);
+        const bottomBorder = Math.ceil(position.y + size.y);
 
-        if (position.x < 0) return 'wall';
-        if (position.x + size.x > this.width) return 'wall';
-        if (position.y < 0) return 'wall';
-        if (position.y + size.y > this.height) return 'lava';
+        if (leftBorder < 0 || rightBorder > this.width || topBorder < 0) {
+            return 'wall';
+        } else if (bottomBorder > this.height) {
+            return 'lava';
+        }
 
-        if (this.grid[position.y][position.x] === 'wall') return 'wall';
-        if (this.grid[position.y][position.x] === 'lava') return 'lava';
+        for (let y = topBorder; y < bottomBorder; y++) {
+            for (let x = leftBorder; x < rightBorder; x++) {
+                if (this.grid[y][x]) {
+                    return this.grid[y][x];
+                }
+            }
+        }
+
+        // if (position.x < 0) return 'wall';
+        // if (position.x + size.x > this.width) return 'wall';
+        // if (position.y < 0) return 'wall';
+        // if (position.y + size.y > this.height) return 'lava';
+
+        // if (this.grid[position.y][position.x] === 'wall') return 'wall';
+        // if (this.grid[position.y][position.x] === 'lava') return 'lava';
     }
 
     removeActor(actor) {
@@ -305,25 +322,27 @@ class Fireball extends Actor {
     }
 
     getNextPosition(time = 1) {
+        return this.pos.plus(this.speed.times(time));
         // for (var i = 0; i < t; i++) {
         //     this.pos.x = this.pos.x + this.speed.x;
         //     this.pos.y = this.pos.y + this.speed.y;
         // }
         // this.pos = this.pos.plus(this.speed)
         // return this.pos;
-        return this.pos.plus(this.speed.times(time));
     }
 
     handleObstacle() {
         this.speed.x = -this.speed.x;
         this.speed.y = -this.speed.y;
+        // console.log(this.speed)
         // this.speed.x *= -1;
         // this.speed.y *= -1;
     }
 
     act(time, level) {
-        const nextPosition = this.getNextPosition(time);
+        let nextPosition = this.getNextPosition(time);
         const obstacle = level.obstacleAt(nextPosition, this.size);
+        // console.log(obstacle)
 
         if (obstacle !== undefined) {
             this.handleObstacle();
@@ -343,8 +362,8 @@ class HorizontalFireball extends Fireball {
 
 class VerticalFireball extends Fireball {
     constructor(pos) {
-        const speed = new Vector(0, 2);
-        super(pos, speed);
+        // const speed = new Vector(0, 2);
+        super(pos, new Vector(0, 2));
     }
 }
 class FireRain extends Fireball {
