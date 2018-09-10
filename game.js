@@ -18,8 +18,12 @@ class Vector {
     }
 
     times(n) {
+        // console.log(this)
+        // console.log(n)
         const x = this.x * n;
         const y = this.y * n;
+        // console.log(x,y)
+        // console.log(`------------------\n\n`)
         return new Vector(x, y);
     }
 }
@@ -181,7 +185,7 @@ class Level {
         if (barrierStr === 'coin' && actor.type === 'coin') {
         // if (barrierStr === 'coin' && (actor instanceof Actor || actor.__proto__ instanceof Actor)) {
             this.removeActor(actor);
-            if (this.noMoreActors(barrierStr)) this.status = 'won';
+            if (this.noMoreActors('coin')) this.status = 'won';
         }
 
     }
@@ -311,21 +315,27 @@ class Fireball extends Actor {
     }
 
     handleObstacle() {
-        this.speed.x *= -1;
-        this.speed.y *= -1;
+        this.speed.x = -this.speed.x;
+        this.speed.y = -this.speed.y;
+        // this.speed.x *= -1;
+        // this.speed.y *= -1;
     }
 
     act(time, level) {
         const nextPosition = this.getNextPosition(time);
         const obstacle = level.obstacleAt(nextPosition, this.size);
 
-        if (obstacle !== undefined) this.handleObstacle();
+        if (obstacle !== undefined) {
+            this.handleObstacle();
+        } else {
+            this.pos = nextPosition;
+        }
+
     }
 }
 
 class HorizontalFireball extends Fireball {
     constructor(pos) {
-        // console.log(pos)
         const speed = new Vector(2, 0);
         super(pos, speed);
     }
