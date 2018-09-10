@@ -300,13 +300,14 @@ class Fireball extends Actor {
         return "fireball";
     }
 
-    getNextPosition(t = 1) {
-        for (var i = 0; i < t; i++) {
-            this.pos.x = this.pos.x + this.speed.x;
-            this.pos.y = this.pos.y + this.speed.y;
-        }
-
-        return this.pos;
+    getNextPosition(time = 1) {
+        // for (var i = 0; i < t; i++) {
+        //     this.pos.x = this.pos.x + this.speed.x;
+        //     this.pos.y = this.pos.y + this.speed.y;
+        // }
+        // this.pos = this.pos.plus(this.speed)
+        // return this.pos;
+        return this.pos.plus(this.speed.times(time));
     }
 
     handleObstacle() {
