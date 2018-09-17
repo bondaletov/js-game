@@ -1,18 +1,13 @@
 'use strict';
 class Vector {
     constructor(x = 0, y = 0) {
-        if (typeof x === 'object') {
-            this.x = x.x;
-            this.y = x.y;
-            return;
-        }
-        this.x = x;
-        this.y = y;
+        this.x = x.x || x;
+        this.y = x.y || y;
     }
 
     plus(vector) {
         if (!(vector instanceof Vector)) {
-            throw new TypeError("ошибка");
+            throw new TypeError('ошибка');
         }
         return new Vector(this.x + vector.x, this.y + vector.y);
     }
@@ -31,7 +26,7 @@ class Actor {
         } else if (pos === undefined) {
             this.pos = new Vector();
         } else {
-            throw new TypeError("Ошибка в Actor pos");
+            throw new TypeError('Ошибка в Actor pos');
         }
 
         if (size instanceof Vector) {
@@ -42,7 +37,7 @@ class Actor {
                 y: 1
             });
         } else {
-            throw new TypeError("Ошибка в Actor size");
+            throw new TypeError('Ошибка в Actor size');
         }
 
         if (speed instanceof Vector) {
@@ -50,17 +45,15 @@ class Actor {
         } else if (speed === undefined) {
             this.speed = new Vector();
         } else {
-            throw new TypeError("Ошибка в Actor speed");
+            throw new TypeError('Ошибка в Actor speed');
         }
     }
 
     get type() {
-        return "actor";
+        return 'actor';
     }
 
-    act() {
-
-    }
+    act() {  }
 
     get left() {
         return this.pos.x;
@@ -81,15 +74,10 @@ class Actor {
         }
         if (actor === this) return false;
 
-        if (this.pos.x < actor.pos.x + actor.size.x &&
+        return (this.pos.x < actor.pos.x + actor.size.x &&
             this.pos.x + this.size.x > actor.pos.x &&
             this.pos.y < actor.pos.y + actor.size.y &&
-            this.pos.y + this.size.y > actor.pos.y) {
-            // collision detected!
-            return true;
-        }
-
-        return false;
+            this.pos.y + this.size.y > actor.pos.y) ? true : false;
     }
 }
 
@@ -98,13 +86,11 @@ class Level {
         this.grid = grid || [];
         this.status = null;
         this.finishDelay = 1;
-        this.actors = actors;
+        this.actors = actors || [];
 
-        if (this.actors) {
-            this.player = this.actors.find(function (actor) {
-                return actor.type === 'player';
-            });
-        }
+        this.player = this.actors.find(function (actor) {
+            return actor.type === 'player';
+        });
     }
 
     get height() {
@@ -112,13 +98,7 @@ class Level {
     }
 
     get width() {
-        let maxWidth = 0;
-        (this.grid).forEach(row => {
-            if (row.length > maxWidth) {
-                maxWidth = row.length;
-            }
-        });
-        return maxWidth;
+        return (this.grid).reduce((maxWidth, row) => row.length > maxWidth ? maxWidth = row.length : maxWidth, 0);
     }
 
     isFinished() {
@@ -141,7 +121,6 @@ class Level {
     obstacleAt(position, size) {
         if ((false === position instanceof Vector) || (false === size instanceof Vector)) throw new Error;
         
-
         const leftBorder = Math.floor(position.x);
         const rightBorder = Math.ceil(position.x + size.x);
         const topBorder = Math.floor(position.y);
@@ -163,21 +142,16 @@ class Level {
     }
 
     removeActor(actor) {
-        for (var [idx, actorElement] of (this.actors).entries()) {
-            if (actor === actorElement) {
-                (this.actors).splice([idx], 1);
-                break;
-            }
-        }
+        const actorId = (this.actors).indexOf(actor);
+        (this.actors).splice(actorId, 1);
     }
 
     noMoreActors(typeString) {
         if (this.actors === undefined) return true;
 
-        const allActorsWithTypeStringType = (this.actors).filter(function (el) {
+        return (!(this.actors).some(function (el) {
             return el.type === typeString;
-        });
-        return allActorsWithTypeStringType.length === 0 ? true : false;
+         }));
     }
 
     playerTouched(barrierStr, actor) {
@@ -187,7 +161,6 @@ class Level {
             this.removeActor(actor);
             if (this.noMoreActors('coin')) this.status = 'won';
         }
-
     }
 }
 
@@ -209,7 +182,6 @@ class LevelParser {
         if (this.dictionaryObstacles.hasOwnProperty(obstacleStr)) {
             return this.dictionaryObstacles[obstacleStr];
         }
-        return undefined;
     }
 
     createGrid(plan) {
@@ -243,6 +215,7 @@ class LevelParser {
                 }
             });
         });
+
         return actors;
     }
  
@@ -260,7 +233,7 @@ class Fireball extends Actor {
     }
 
     get type() {
-        return "fireball";
+        return 'fireball';
     }
 
     getNextPosition(time = 1) {
@@ -318,7 +291,7 @@ class Coin extends Actor {
     }
 
     get type() {
-        return "coin";
+        return 'coin';
     }
 
     updateSpring(time = 1) {
