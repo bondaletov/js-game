@@ -1,8 +1,8 @@
 'use strict';
 class Vector {
     constructor(x = 0, y = 0) {
-        this.x = x.x || x;
-        this.y = x.y || y;
+        this.x = x;
+        this.y = y;
     }
 
     plus(vector) {
@@ -32,10 +32,7 @@ class Actor {
         if (size instanceof Vector) {
             this.size = size;
         } else if (size === undefined) {
-            this.size = new Vector({
-                x: 1,
-                y: 1
-            });
+            this.size = new Vector(1, 1);
         } else {
             throw new TypeError('Ошибка в Actor size');
         }
@@ -74,19 +71,19 @@ class Actor {
         }
         if (actor === this) return false;
 
-        return (this.pos.x < actor.pos.x + actor.size.x &&
-            this.pos.x + this.size.x > actor.pos.x &&
-            this.pos.y < actor.pos.y + actor.size.y &&
-            this.pos.y + this.size.y > actor.pos.y) ? true : false;
+        return this.pos.x < actor.pos.x + actor.size.x &&
+        this.pos.x + this.size.x > actor.pos.x &&
+        this.pos.y < actor.pos.y + actor.size.y &&
+        this.pos.y + this.size.y > actor.pos.y;
     }
 }
 
 class Level {
-    constructor(grid, actors) {
-        this.grid = grid || [];
+    constructor(grid = [], actors = []) {
+        this.grid = grid;
         this.status = null;
         this.finishDelay = 1;
-        this.actors = actors || [];
+        this.actors = actors;
 
         this.player = this.actors.find(function (actor) {
             return actor.type === 'player';
@@ -98,7 +95,13 @@ class Level {
     }
 
     get width() {
-        return (this.grid).reduce((maxWidth, row) => row.length > maxWidth ? maxWidth = row.length : maxWidth, 0);
+        return typeof this._widthCache !== 'undefined' ? 
+        this._widthCache :
+        this._widthCache = (this.grid).reduce((maxWidth, row) => row.length > maxWidth ? maxWidth = row.length : maxWidth, 0);
+    }
+
+    set width(v) {
+        this.width = v;
     }
 
     isFinished() {
