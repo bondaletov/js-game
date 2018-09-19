@@ -95,9 +95,11 @@ class Level {
     }
 
     get width() {
-        return typeof this._widthCache !== 'undefined' ? 
-        this._widthCache :
-        this._widthCache = (this.grid).reduce((maxWidth, row) => row.length > maxWidth ? maxWidth = row.length : maxWidth, 0);
+        return this._widthCache || (this._widthCache = (this.grid).reduce((maxWidth, row) => row.length > maxWidth ? maxWidth = row.length : maxWidth, 0));
+        
+        // return typeof this._widthCache !== 'undefined' ? 
+        // this._widthCache :
+        // this._widthCache = (this.grid).reduce((maxWidth, row) => row.length > maxWidth ? maxWidth = row.length : maxWidth, 0);
     }
 
     set width(v) {
@@ -150,8 +152,6 @@ class Level {
     }
 
     noMoreActors(typeString) {
-        if (this.actors === undefined) return true;
-
         return (!(this.actors).some(function (el) {
             return el.type === typeString;
          }));
